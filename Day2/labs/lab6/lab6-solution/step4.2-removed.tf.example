@@ -1,0 +1,13 @@
+# Step 4.2: Removed block for IAM role
+# Rename to removed.tf to use
+# Delete after successful apply (Step 4.5)
+
+# Remove IAM role from Terraform management
+# The role will continue to exist in AWS
+removed {
+  from = aws_iam_role.application
+
+  lifecycle {
+    destroy = false  # Keep the resource in AWS
+  }
+}

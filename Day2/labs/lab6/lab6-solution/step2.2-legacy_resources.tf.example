@@ -1,0 +1,35 @@
+# Step 2.2: Resource definitions for import
+# Rename to legacy_resources.tf to use
+
+# S3 Bucket - will be imported
+resource "aws_s3_bucket" "legacy_logs" {
+  bucket = "${local.name_prefix}-logs-bucket"
+
+  tags = {
+    Name        = "${local.name_prefix}-logs-bucket"
+    Environment = "production"
+    Purpose     = "logs"
+    Owner       = var.project
+  }
+}
+
+# IAM Role - will be imported
+resource "aws_iam_role" "legacy_app" {
+  name = "${local.name_prefix}-app-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Service = "ec2.amazonaws.com" }
+      Action    = "sts:AssumeRole"
+    }]
+  })
+
+  tags = {
+    Name        = "${local.name_prefix}-app-role"
+    Environment = "production"
+    Purpose     = "application"
+    Owner       = var.project
+  }
+}

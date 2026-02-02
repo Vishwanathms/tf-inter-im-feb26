@@ -1,0 +1,15 @@
+# Step 2.3: Import blocks
+# Rename to imports.tf to use
+# Delete after successful import (Step 2.6)
+
+# Import block for S3 bucket
+import {
+  to = aws_s3_bucket.legacy_logs
+  id = "${local.name_prefix}-logs-bucket"
+}
+
+# Import block for IAM role
+import {
+  to = aws_iam_role.legacy_app
+  id = "${local.name_prefix}-app-role"
+}

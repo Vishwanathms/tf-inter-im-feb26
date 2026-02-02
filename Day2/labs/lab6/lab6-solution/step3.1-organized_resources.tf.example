@@ -1,0 +1,36 @@
+# Step 3.1: Reorganized resources (before Part 4)
+# Rename to organized_resources.tf to use
+# This version includes the IAM role (before state rm)
+
+# Storage resources
+resource "aws_s3_bucket" "logs" {
+  bucket = "${local.name_prefix}-logs-bucket"
+
+  tags = {
+    Name        = "${local.name_prefix}-logs-bucket"
+    Environment = "production"
+    Purpose     = "logs"
+    Owner       = var.project
+  }
+}
+
+# IAM resources
+resource "aws_iam_role" "application" {
+  name = "${local.name_prefix}-app-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Service = "ec2.amazonaws.com" }
+      Action    = "sts:AssumeRole"
+    }]
+  })
+
+  tags = {
+    Name        = "${local.name_prefix}-app-role"
+    Environment = "production"
+    Purpose     = "application"
+    Owner       = var.project
+  }
+}
