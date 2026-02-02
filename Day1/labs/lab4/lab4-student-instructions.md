@@ -100,7 +100,7 @@ cp ~/intermediate/day1/labs/lab4/lab4-solution/variables.tf .
 variable "aws_region" {
   description = "AWS region"
   type        = string
-  default     = "us-west-1"
+  default     = "us-east-1"
 }
 
 variable "project" {
@@ -460,7 +460,7 @@ INSTANCE_ID=$(terraform output -raw instance_id)
 aws ec2 create-tags \
   --resources $INSTANCE_ID \
   --tags Key=LastModifiedBy,Value=external-process \
-  --region us-west-1
+  --region us-east-1
 
 # Run plan - notice Terraform does NOT try to remove the tag
 terraform plan -var-file="dev.tfvars"

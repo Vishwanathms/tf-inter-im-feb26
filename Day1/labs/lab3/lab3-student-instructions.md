@@ -156,7 +156,7 @@ After copying, the file contains:
 variable "aws_region" {
   description = "AWS region"
   type        = string
-  default     = "us-west-1"
+  default     = "us-east-1"
 }
 
 variable "project" {
