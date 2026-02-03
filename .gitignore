@@ -2,3 +2,5 @@
 .terraform/
 .terraform.lock.hcl
 key1-vishwa.pem
+terraform.tfstate
+terraform.tfstate.backup

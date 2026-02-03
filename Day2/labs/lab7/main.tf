@@ -35,7 +35,10 @@ EOF
 
 
 resource "null_resource" "cp-file" {
-  
+
+  triggers = {
+    always_run = timestamp()
+  }
   connection {
     type = "ssh"
     user = "ec2-user"
@@ -44,9 +47,31 @@ resource "null_resource" "cp-file" {
   }
 
   provisioner "file" {
-    source = "sample_file.txt"
-    destination = "/home/ec2-user/sample_file.txt"
+    source = "sample_file.sh"
+    destination = "/home/ec2-user/sample_file.sh"
   }
 
 }
 
+resource "null_resource" "run_script" {
+
+  triggers = {
+    always_run = timestamp()
+  }
+  connection {
+    type = "ssh"
+    user = "ec2-user"
+    host = aws_instance.demo[0].public_ip
+    private_key = file("key1-vishwa.pem")
+  }
+
+  provisioner "remote-exec" {
+    inline = [ 
+      "chmod +x /home/ec2-user/sample_file.sh",
+      "sh sample_file.sh"
+     ]
+  }
+
+  depends_on = [ null_resource.cp-file ]
+
+}
