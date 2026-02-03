@@ -6,7 +6,7 @@ data "terraform_remote_state" "infrastructure" {
   backend = "s3"
 
   config = {
-    bucket = "boa-terraform-state-im-userX"  # Replace userX with your user number
+    bucket = "boa-terraform-state-im-vishwa"  # Replace userX with your user number
     key    = "lab5/infrastructure/terraform.tfstate"
     region = var.aws_region
   }

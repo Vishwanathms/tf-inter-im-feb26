@@ -11,7 +11,7 @@ terraform {
   # Remote state configuration
   # IMPORTANT: Replace YOUR_STATE_BUCKET with your actual bucket name
   backend "s3" {
-    bucket       = "YOUR_STATE_BUCKET"
+    bucket       = "boa-terraform-state-im-vishwa"
     key          = "lab5/infrastructure/terraform.tfstate"
     region       = "us-west-1"
     encrypt      = true
