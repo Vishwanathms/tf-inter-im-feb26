@@ -13,6 +13,16 @@ resource "aws_instance" "demo" {
   }
 }
 
+resource "aws_instance" "python_vm" {
+  ami           = "ami-0030e4319cbf4dbf2" # Amazon Linux 3 (example)
+  instance_type = "t3.micro"
+  key_name = "key1-vishwa"
+
+  tags = {
+    Name = local.name
+  }
+}
+
 locals {
   name =  format("%s-wed-%s-%02d", var.project, var.env,18)  
 }
