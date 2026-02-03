@@ -1,0 +1,57 @@
+#!/bin/bash
+set -e
+
+export DEBIAN_FRONTEND=noninteractive
+REDIS_HOST="${redis_ip}"
+
+apt-get update -y
+apt-get install -y python3 python3-pip
+
+pip3 install flask redis
+
+cat > /home/ubuntu/app.py <<'PY'
+from flask import Flask
+import redis
+import os
+
+app = Flask(__name__)
+redis_host = os.environ.get("REDIS_HOST", "127.0.0.1")
+
+r = redis.Redis(host=redis_host, port=6379, decode_responses=True)
+
+@app.route("/")
+def home():
+    count = r.incr("page_refresh_count")
+    return f"""
+    <h2>Terraform Demo: Python + Redis</h2>
+    <p>Redis Host: <b>{redis_host}</b></p>
+    <p>Refresh Count: <b>{count}</b></p>
+    """
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+PY
+
+chown ubuntu:ubuntu /home/ubuntu/app.py
+
+# systemd service for python app
+cat > /etc/systemd/system/python-redis-app.service <<EOF
+[Unit]
+Description=Python Flask App (Redis Counter)
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu
+Environment=REDIS_HOST=${redis_ip}
+ExecStart=/usr/bin/python3 /home/ubuntu/app.py
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable python-redis-app
+systemctl start python-redis-app
